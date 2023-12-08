@@ -1,0 +1,60 @@
+ For a list of votes, return an ordered set of candidate in descending order of their votes.
+* Vote is a class that contains list of candidate names(as String)
+
+List<String> findWinner(List<Vote> votes)
+
+We pass in a list of votes and we are returned a list of names in the descending order of the score 
+that each candidate received. Assume that we extract the candidates' names from the votes as we process 
+them.
+
+A voter is allowed to vote for up to three different candidates. The order of the votes is important. 
+The first vote that a voter places is worth three points. The second vote is worth two points. 
+The third vote is worth one point.
+
+The function should return a list of candidates in descending order of the total number of points 
+received by the candidate.*/
+
+
+import java.util.*;
+
+class Vote {
+    List<String> candidates;
+
+    public Vote(List<String> candidates) {
+        this.candidates = candidates;
+    }
+}
+
+public class Election {
+
+    public static List<String> findWinner(List<Vote> votes) {
+        Map<String, Integer> candidateScores = new HashMap<>();
+
+        // Process each vote and calculate scores
+        for (Vote vote : votes) {
+            for (int i = 0; i < vote.candidates.size(); i++) {
+                String candidate = vote.candidates.get(i);
+                int points = 3 - i; // Assign points based on the order of the vote
+                candidateScores.put(candidate, candidateScores.getOrDefault(candidate, 0) + points);
+            }
+        }
+
+        // Create a list of candidates and sort it based on scores in descending order
+        List<String> result = new ArrayList<>(candidateScores.keySet());
+        result.sort((c1, c2) -> Integer.compare(candidateScores.get(c2), candidateScores.get(c1)));
+
+        return result;
+    }
+
+    public static void main(String[] args) {
+        // Example usage
+        List<Vote> votes = new ArrayList<>();
+        votes.add(new Vote(Arrays.asList("CandidateA", "CandidateB", "CandidateC")));
+        votes.add(new Vote(Arrays.asList("CandidateB", "CandidateA", "CandidateC")));
+        votes.add(new Vote(Arrays.asList("CandidateC", "CandidateB", "CandidateA")));
+
+        List<String> winner = findWinner(votes);
+
+        System.out.println("Winner in descending order: " + winner);
+    }
+}
